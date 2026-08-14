@@ -235,4 +235,39 @@ public class EntityTest {
         emf.close();
     }
 
+
+    @Test
+    @DisplayName("flush() 메서드 확인")
+    void test9() {
+        EntityTransaction et = em.getTransaction(); // EntityManager에서 트랜잭션을 가져옴
+
+        et.begin(); // 트랜잭션 시작
+
+        try {
+            // 저장할 엔터티 객체 생성
+            Memo memo1 = new Memo();
+            memo1.setId(26L);
+            memo1.setUsername("김메타26");
+            memo1.setContents("flush 메서드 호출 확인");
+            em.persist(memo1);
+
+            System.out.println("---flush() 전---");
+            em.flush();
+            System.out.println("---flush() 후---");
+
+            System.out.println("---트랜잭션 commit 전---");
+            // 트랜잭션 커밋
+            et.commit();
+            System.out.println("---트랜잭션 commit 후---");
+        } catch (Exception e) {
+            et.rollback();
+            throw new RuntimeException(e);
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+
+
 }
