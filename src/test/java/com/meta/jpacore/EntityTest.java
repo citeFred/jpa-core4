@@ -176,4 +176,30 @@ public class EntityTest {
         }
         emf.close();
     }
+
+
+    @Test
+    @DisplayName("1차 캐시에서의 엔터티 삭제")
+    void test7() {
+        EntityTransaction et = em.getTransaction(); // EntityManager에서 트랜잭션을 가져옴
+
+        et.begin(); // 트랜잭션 시작
+
+        // Ctrl + Alt + T -> TryCatchFinally
+        try {
+            Memo memo = em.find(Memo.class, 23L);
+
+            em.remove(memo);
+            // Debuger -> em>persist context->entityEntryContext->persist context->entityEntryContext->nonEnhancedEntityXref 에서 Managed 상태확인
+
+            // 트랜잭션 커밋
+            et.commit();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
 }
