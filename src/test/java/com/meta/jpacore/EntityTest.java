@@ -300,4 +300,15 @@ public class EntityTest {
         emf.close();
     }
 
+    /**
+     * 엔터티의 영속화 상태
+     * 비영속 = key가 null
+     * 영속 = em.persist() 를 통해 xref -> entry 에 "MANAGED"
+     * 준영속 = em.detach() 를 통해 "DETACHED"
+     * -> 준영속 em.merge()를 통해 영속상태로 복원
+     * 삭제 = em.remove() 를 통해 "REMOVED"
+     *
+     * 영속성 컨텍스트 내부를 전체 비움 = em.clear(); -> 내부에 있던 엔터티들이 모두 DETACHED
+     * 영속성 컨텍스트 종료 = em.close()
+     */
 }
