@@ -141,4 +141,39 @@ public class EntityTest {
         }
         emf.close();
     }
+
+
+    @Test
+    @DisplayName("객체 동일성 보장 확인")
+    void test6() {
+        EntityTransaction et = em.getTransaction(); // EntityManager에서 트랜잭션을 가져옴
+
+        et.begin(); // 트랜잭션 시작
+
+        // Ctrl + Alt + T -> TryCatchFinally
+        try {
+            // 저장할 엔터티 객체 생성
+            Memo memo3 = new Memo();
+            memo3.setId(23L);
+            memo3.setUsername("김메타23");
+            memo3.setContents("객체 동일성 보장");
+
+            // EM이 memo 객체를 영속성 컨텍스트에 관리
+            em.persist(memo3);
+            Memo memo0 = em.find(Memo.class, 23L);
+
+            Memo memo1 = em.find(Memo.class, 10L);
+
+            System.out.println(memo3 == memo0); // true
+            System.out.println(memo1 == memo0); // false
+
+            // 트랜잭션 커밋
+            et.commit();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
 }
