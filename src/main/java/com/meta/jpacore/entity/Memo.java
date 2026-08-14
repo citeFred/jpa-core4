@@ -1,9 +1,11 @@
 package com.meta.jpacore.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 
 @Setter
+@Getter
 @Entity
 @Table(name = "memo")
 public class Memo {

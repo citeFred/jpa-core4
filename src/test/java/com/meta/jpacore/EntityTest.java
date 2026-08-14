@@ -73,4 +73,72 @@ public class EntityTest {
 
         emf.close();
     }
+
+
+    @Test
+    @DisplayName("1차 캐시 : Entity 저장")
+    void test3() {
+        EntityTransaction et = em.getTransaction(); // EntityManager에서 트랜잭션을 가져옴
+
+        et.begin(); // 트랜잭션 시작
+
+        // Ctrl + Alt + T -> TryCatchFinally
+        try {
+            // 저장할 엔터티 객체 생성
+            Memo memo = new Memo();
+            memo.setId(10L);
+            memo.setUsername("김메타10");
+            memo.setContents("1차 캐시 Entity 저장");
+
+            // EM이 memo 객체를 영속성 컨텍스트에 관리
+            em.persist(memo);
+
+            // 트랜잭션 커밋
+            et.commit();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    @Test
+    @DisplayName("1차 캐시 : 조회시 캐시 저장소에 해당하는 Id가 존재하지 않는 경우")
+    void test4() {
+        try {
+            // 저장할 엔터티 객체 생성
+            Memo memo = em.find(Memo.class, 10L);
+            System.out.println("memo.getId() = " + memo.getId());
+            System.out.println("memo.getUsername() = " + memo.getUsername());
+            System.out.println("memo.getContents() = " + memo.getContents());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
+
+    @Test
+    @DisplayName("1차 캐시 : 조회시 캐시 저장소에 해당하는 Id가 존재하는 경우")
+    void test5() {
+        try {
+            // 저장할 엔터티 객체 조회
+            Memo memo1 = em.find(Memo.class, 10L);
+            Memo memo2 = em.find(Memo.class, 10L);
+            // 다른 메모리를 사용하는 변수를 지정하더라도 위 2개의 엔터티는 같은 객체를 바라봄.
+
+            System.out.println("memo.getId() = " + memo2.getId());
+            System.out.println("memo.getUsername() = " + memo2.getUsername());
+            System.out.println("memo.getContents() = " + memo2.getContents());
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            em.close();
+        }
+        emf.close();
+    }
 }
